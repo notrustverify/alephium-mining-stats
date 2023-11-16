@@ -8,4 +8,6 @@ services:
       env_file:
         - .env
       ports:
-        - 8080:8080
+        - 8080:80
+      volumes:
+        - ./data/mining-stats.db:mining-stats.db
