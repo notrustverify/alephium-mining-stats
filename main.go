@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-co-op/gocron"
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -31,12 +32,11 @@ type groupStat struct {
 const file string = "mining-stats.db"
 
 func main() {
-	//getData()
 	initDb()
-	//err := godotenv.Load(".env")
-	//if err != nil {
-	//	fmt.Println("No env file, will use system variable")
-	//}
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println("No env file, will use system variable")
+	}
 
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
@@ -80,6 +80,11 @@ func getData(dbHost string, dbPort string, dbUsername string, dbPassword string,
 	for mainGroup := 0; mainGroup <= 3; mainGroup++ {
 		for secondGroup := 0; secondGroup <= 3; secondGroup++ {
 			fmt.Printf("Group %d,%d\n", mainGroup, secondGroup)
+
+			if mainGroup > secondGroup {
+				fmt.Println("pass")
+				continue
+			}
 
 			rows, err := db.Query(fmt.Sprintf("select encode(OUTS.block_hash,'hex'),OUTS.address, OUTS.block_timestamp from outputs OUTS inner join transactions TX ON TX.block_hash=OUTS.block_hash where TX.coinbase=true and OUTS.coinbase=true and (chain_from=%d and chain_to=%d) order by TX.block_timestamp desc limit 1000;", mainGroup, secondGroup))
 
