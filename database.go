@@ -47,9 +47,7 @@ func getStatsData() []miningStat {
 
 	for mainGroup := 0; mainGroup <= 3; mainGroup++ {
 		for secondGroup := 0; secondGroup <= 3; secondGroup++ {
-			if mainGroup > secondGroup {
-				continue
-			}
+
 			rows, err := dbGet.Query(fmt.Sprintf("select * from mining_stats where groupId='%d%d' order by block_timestamp desc limit 1000", mainGroup, secondGroup))
 			if err != nil {
 				log.Fatalln(err)

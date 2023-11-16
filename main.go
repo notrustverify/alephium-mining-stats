@@ -90,11 +90,6 @@ func getData(dbHost string, dbPort string, dbUsername string, dbPassword string,
 		for secondGroup := 0; secondGroup <= 3; secondGroup++ {
 			fmt.Printf("Group %d,%d\n", mainGroup, secondGroup)
 
-			if mainGroup > secondGroup {
-				fmt.Println("pass")
-				continue
-			}
-
 			rows, err := db.Query(fmt.Sprintf("select encode(OUTS.block_hash,'hex'),OUTS.address, OUTS.block_timestamp from outputs OUTS inner join transactions TX ON TX.block_hash=OUTS.block_hash where TX.coinbase=true and OUTS.coinbase=true and (chain_from=%d and chain_to=%d) order by TX.block_timestamp desc limit 1000;", mainGroup, secondGroup))
 
 			if err != nil {
