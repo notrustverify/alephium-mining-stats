@@ -77,7 +77,6 @@
     }).then(() => {
         let counter = 0
         occurence_miner_address.forEach(element => {
-            console.log(element)
 
             const sortedMinerAddr = Object.entries(element).sort(([, a], [, b]) => a - b)
                 .reduce(
