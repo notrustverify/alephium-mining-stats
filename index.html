@@ -85,8 +85,8 @@
                         Object.keys(occurence_miner_address[counter])
                     ,
                     datasets: [{
-                        label: 'Blocks mined by',
-                        data: Object.values(occurence_miner_address[counter]),
+                        label: 'Blocks mined',
+                        data: Object.values(occurence_miner_address[counter]).sort(function(a, b){return a-b}),
                         hoverOffset: 4
                     }]
                 },
