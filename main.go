@@ -59,7 +59,7 @@ func main() {
 	router.Use(cors.New(corsConfig))
 	router.GET("/stats", getStats)
 
-	router.Run("0.0.0.0:8080")
+	router.Run("0.0.0.0:80")
 
 }
 
