@@ -11,7 +11,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-co-op/gocron"
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -35,20 +34,20 @@ const file string = "mining-stats.db"
 func main() {
 	//getData()
 	initDb()
-
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
-	}
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	//	fmt.Println("No env file, will use system variable")
+	//}
 
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
+	cronUpdate := os.Getenv("CRON_UPDATE_MINING")
 
 	s := gocron.NewScheduler(time.UTC)
-	s.Every("10m").Do(getData, dbHost, dbPort, dbUsername, dbPassword, dbName)
+	s.Every(cronUpdate).Do(getData, dbHost, dbPort, dbUsername, dbPassword, dbName)
 	s.StartAsync()
 
 	corsConfig := cors.Config{
@@ -60,7 +59,7 @@ func main() {
 	router.Use(cors.New(corsConfig))
 	router.GET("/stats", getStats)
 
-	router.Run("localhost:8080")
+	router.Run("0.0.0.0:8080")
 
 }
 
