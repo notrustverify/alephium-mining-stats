@@ -29,7 +29,7 @@
 <script>
 
     async function loadStats() {
-        const response = await fetch('http://api-mining.notrustverify.ch/stats');
+        const response = await fetch('https://api-mining.notrustverify.ch/stats');
         const stats = await response.json();
         console.log(stats)
         return stats
