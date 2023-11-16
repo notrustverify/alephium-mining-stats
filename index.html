@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Alephium Mining Stats</title>
+</head>
+
+
+
+<body>
+
+
+
+    <h3>
+        <p>Actual height</p>
+        <div id="heights">
+
+
+
+        </div>
+
+    </h3>
+
+</body>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    async function loadStats() {
+        const response = await fetch('http://localhost:8080/stats');
+        const stats = await response.json();
+
+        return stats
+    }
+
+    async function getHeights() {
+        const response = await fetch('https://backend.mainnet.alephium.org/infos/heights');
+        const stats = await response.json();
+
+        return stats
+
+    }
+
+    function mapToProp(data, prop) {
+        return data
+            .reduce((res, item) => Object
+                .assign(res, {
+                    [item[prop]]: 1 + (res[item[prop]] || 0)
+                }), Object.create(null))
+            ;
+    }
+
+
+
+
+    let ctxChartArray = []
+
+
+    let occurence_miner_address = []
+    loadStats().then(array => {
+        let counter = 0
+        array.forEach(element => {
+            occurence_miner_address[counter++] = mapToProp(element['group_stat'], "miner_address")
+        })
+    }).then(() => {
+        let counter = 0
+
+        occurence_miner_address.forEach(element => {
+            new Chart(ctxChartArray[counter], {
+                type: 'pie',
+                data: {
+                    labels:
+                        Object.keys(occurence_miner_address[counter])
+                    ,
+                    datasets: [{
+                        label: 'Blocks mined by',
+                        data: Object.values(occurence_miner_address[counter]),
+                        hoverOffset: 4
+                    }]
+                }
+            });
+            counter++
+        })
+    })
+
+
+    getHeights().then(array => {
+
+        array.forEach(element => {
+            var para = document.createElement("p");
+            let canvasChart = document.createElement("canvas")
+            canvasChart.id = "chart" + element.chainFrom + "" + element.chainTo
+
+
+            var node = document.createTextNode("Group: " + element.chainFrom + "," + element.chainTo + " height " + element.height);
+            para.appendChild(node);
+            para.appendChild(canvasChart)
+            var element = document.getElementById("heights");
+            element.appendChild(para);
+        });
+    }
+
+    ).then(() => {
+        let counter = 0
+        for (let indexMain = 0; indexMain <= 3; indexMain++) {
+            for (let indexSecond = 0; indexSecond <= 3; indexSecond++) {
+                ctxChartArray[counter++] = document.getElementById("chart" + indexMain + indexSecond);
+            }
+        }
+    }
+
+    )
+
+
+</script>
+
+</html>
