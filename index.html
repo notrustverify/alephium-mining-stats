@@ -26,7 +26,6 @@
     async function loadStats() {
         const response = await fetch('https://api-mining.notrustverify.ch/stats');
         const stats = await response.json();
-        console.log(stats)
         return stats
     }
 
@@ -69,6 +68,7 @@
     };
 
     let occurence_miner_address = []
+
     loadStats().then(array => {
         let counter = 0
         array.forEach(element => {
@@ -76,20 +76,27 @@
         })
     }).then(() => {
         let counter = 0
+        occurence_miner_address.forEach(element => {
+            console.log(element)
 
-        occurence_miner_address.sort(function (a, b) {
-            return a.number - b.number;
-        }
-        ).reverse().forEach(element => {
+            const sortedMinerAddr = Object.entries(element).sort(([, a], [, b]) => a - b)
+                .reduce(
+                    (r, [k, v]) => ({
+                        ...r,
+                        [k]: v
+                    }),
+                    {}
+                )
+
             new Chart(ctxChartArray[counter], {
                 type: 'pie',
                 data: {
                     labels:
-                        Object.keys(occurence_miner_address[counter])
+                        Object.keys(sortedMinerAddr).reverse()
                     ,
                     datasets: [{
                         label: 'Blocks mined',
-                        data: Object.values(occurence_miner_address[counter]),
+                        data: Object.values(sortedMinerAddr).reverse(),
                         hoverOffset: 4
                     }]
                 },
