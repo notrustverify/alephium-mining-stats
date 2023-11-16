@@ -29,7 +29,12 @@
 <script>
 
     async function loadStats() {
-        const response = await fetch('https://api-mining.notrustverify.ch/stats');
+        const response = await fetch('https://api-mining.notrustverify.ch/stats', {
+            mode: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            }
+        });
         const stats = await response.json();
 
         return stats
