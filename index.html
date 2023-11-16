@@ -11,7 +11,7 @@
 <body>
     <h3>Alephium Mining Stats</h3>
     <p>Last 1000 blocks</p>
-    <br/>
+    <br />
     <div id="heights"></div>
 
 </body>
@@ -77,10 +77,10 @@
     }).then(() => {
         let counter = 0
 
-        occurence_miner_address.sort(function(a,b){
-    return a.number - b.number;
-    }
-).forEach(element => {
+        occurence_miner_address.sort(function (a, b) {
+            return a.number - b.number;
+        }
+        ).reverse().forEach(element => {
             new Chart(ctxChartArray[counter], {
                 type: 'pie',
                 data: {
