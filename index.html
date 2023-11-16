@@ -26,6 +26,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.min.js"></script>
 <script>
 
     async function loadStats() {
@@ -56,7 +57,22 @@
 
 
     let ctxChartArray = []
-
+    var options = {
+  tooltips: {
+    enabled: false
+  },
+  plugins: {
+    datalabels: {
+      formatter: (value, ctx) => {
+        const datapoints = ctx.chart.data.datasets[0].data
+         const total = datapoints.reduce((total, datapoint) => total + datapoint, 0)
+        const percentage = value / total * 100
+        return percentage.toFixed(2) + "%";
+      },
+      color: '#fff',
+    }
+  }
+};
 
     let occurence_miner_address = []
     loadStats().then(array => {
@@ -79,7 +95,10 @@
                         data: Object.values(occurence_miner_address[counter]),
                         hoverOffset: 4
                     }]
-                }
+                },
+                options: options,
+                plugins: [ChartDataLabels],
+
             });
             counter++
         })
@@ -107,7 +126,7 @@
         for (let indexMain = 0; indexMain <= 3; indexMain++) {
             for (let indexSecond = 0; indexSecond <= 3; indexSecond++) {
 
-                if(indexMain > indexSecond)
+                if (indexMain > indexSecond)
                     continue
                 ctxChartArray[counter++] = document.getElementById("chart" + indexMain + indexSecond);
             }
