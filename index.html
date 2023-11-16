@@ -29,9 +29,9 @@
 <script>
 
     async function loadStats() {
-        const response = await fetch('https://api-mining.notrustverify.ch/stats');
+        const response = await fetch('http://api-mining.notrustverify.ch/stats');
         const stats = await response.json();
-
+        console.log(stats)
         return stats
     }
 
@@ -44,8 +44,6 @@
     }
 
     function mapToProp(data, prop) {
-        if(data !== null)
-         return
         return data
             .reduce((res, item) => Object
                 .assign(res, {
@@ -109,10 +107,8 @@
         for (let indexMain = 0; indexMain <= 3; indexMain++) {
             for (let indexSecond = 0; indexSecond <= 3; indexSecond++) {
 
-                if (indexMain > indexSecond) 
-				continue
-			
-
+                if(indexMain > indexSecond)
+                    continue
                 ctxChartArray[counter++] = document.getElementById("chart" + indexMain + indexSecond);
             }
         }
