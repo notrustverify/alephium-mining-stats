@@ -8,7 +8,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-co-op/gocron"
 	_ "github.com/lib/pq"
@@ -50,16 +49,10 @@ func main() {
 	s.Every(cronUpdate).Do(getData, dbHost, dbPort, dbUsername, dbPassword, dbName)
 	s.StartAsync()
 
-	corsConfig := cors.Config{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{"GET", "OPTIONS"},
-	}
-
 	router := gin.Default()
-	router.Use(cors.New(corsConfig))
 	router.GET("/stats", getStats)
 
-	router.Run("0.0.0.0:80")
+	router.Run("0.0.0.0:8080")
 
 }
 
